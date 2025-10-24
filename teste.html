@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infográfico e Notas</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; height: 100vh; background: linear-gradient(160deg, #b35f43 0%, #a2553b 100%); font-family: "Georgia", serif; color: #fff; overflow: hidden; }
+
+  header, footer { position: fixed; width: 100%; background-color: rgba(255,255,255,0.2); padding: 10px 30px; font-family: "Arial", sans-serif; font-weight: bold; display: flex; justify-content: space-between; align-items: center; color: #000; z-index: 10; opacity: 0.85; }
+  header { top: 0; } footer { bottom: 0; }
+  header div, footer div { text-align: center; font-size: 1rem; }
+
+  .container { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; width: 85%; }
+  h1 { font-size: 6rem; letter-spacing: 4px; margin: 0 0 20px 0; text-shadow: 2px 2px 6px rgba(0,0,0,0.25); text-align: center; margin-left: 120px; }
+
+  .content { display: flex; align-items: center; justify-content: center; gap: 100px; }
+  .names-box { background: #fff; color: #000; border-radius: 14px; padding: 25px 65px; box-shadow: 0 4px 10px rgba(0,0,0,0.25); font-family: "Arial", sans-serif; font-size: 2rem; line-height: 2.4rem; font-weight: 600; text-align: center; opacity: 0.95; margin-right: 60px; }
+  .names-box button { margin-top: 20px; padding: 10px 30px; font-size: 1.6rem; font-weight: bold; border: none; border-radius: 10px; background-color: #467d82; color: #fff; cursor: pointer; transition: 0.3s ease; }
+  .names-box button:hover { background-color: #365a5f; }
+
+  .graph { position: relative; width: 320px; height: 320px; background: repeating-linear-gradient(to right, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 1px, transparent 1px, transparent 25px), repeating-linear-gradient(to bottom, rgba(255,255,255,0.1) 0, rgba(255,255,255,0.1) 1px, transparent 1px, transparent 25px); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; box-shadow: 3px 3px 8px rgba(0,0,0,0.25); margin-left: 20px; }
+  .axis { position: absolute; background-color: #fff; }
+  .axis.x { width: 100%; height: 2px; top: 50%; }
+  .axis.y { height: 100%; width: 2px; left: 50%; }
+  .arrow { position: absolute; width: 0; height: 0; border-style: solid; }
+  .arrow.x { border-width: 6px 0 6px 12px; border-color: transparent transparent transparent #fff; right: -12px; top: 49%; }
+  .arrow.y { border-width: 0 6px 12px 6px; border-color: #fff transparent transparent transparent; left: 49%; top: -12px; }
+
+  .calculator { width: 180px; height: 250px; background-color: #467d82; border-radius: 14px; padding: 14px; box-shadow: 6px 6px 14px rgba(0,0,0,0.35); transform: rotate(-3deg); display: flex; flex-direction: column; justify-content: space-between; margin-right: 1px; }
+  .calc-display { background: #fff; height: 50px; border-radius: 6px; }
+  .buttons { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .buttons div { background: #f3f3f3; height: 35px; border-radius: 6px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.3); }
+
+  .calculator:hover, .graph:hover { transform: scale(1.05); transition: 0.4s ease; }
+
+  #notasPage { display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 20px; background: linear-gradient(160deg, #b35f43 0%, #a2553b 100%); height: 100vh; overflow: auto; }
+
+  .wrap { max-width: 800px; margin: 0 auto 45px; background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08); border: 1px solid #e1e5ea; text-align: center; }
+  canvas { display: block; margin: 0 auto; max-width: 750px; height: auto; }
+
+  .botoes { margin-top: 15px; display: flex; justify-content: center; gap: 10px; }
+  .botoes button { padding: 6px 15px; font-size: 14px; border-radius: 5px; border: 1px solid #ccc; background: #f0f0f0; cursor: pointer; transition: background 0.2s; }
+  .botoes button:hover { background: #e0e0e0; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div>Universidade do Estado do Rio Grande do Norte - UERN</div>
+  <div>Curso C&T</div>
+  <div>Keven William • Lemuel Malaquias • Daniel Henrique</div>
+  <div>Matéria: Unidade Curricular de Extensão</div>
+  <div>Professora: Mara</div>
+</header>
+
+<div class="container" id="infografico">
+  <h1>INFOGRÁFICO</h1>
+  <div class="content">
+    <div class="graph">
+      <div class="axis x"></div>
+      <div class="axis y"></div>
+      <div class="arrow x"></div>
+      <div class="arrow y"></div>
+    </div>
+    <div class="names-box">
+      DANIEL HENRIQUE<br>
+      KEVEN WILLIAM<br>
+      LEMUEL MALAQUIAS
+      <br>
+      <button id="nextBtn">Próximo</button>
+    </div>
+    <div class="calculator">
+      <div class="calc-display"></div>
+      <div class="buttons">
+        <div></div><div></div><div></div>
+        <div></div><div></div><div></div>
+        <div></div><div></div><div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="notasPage">
+  <h2>Notas da Turma 2025 — Notas por Matéria e Prova</h2>
+  <div class="wrap">
+    <div id="tituloGrafico" class="materia-titulo"></div>
+    <canvas id="graficoMateria" width="750" height="450"></canvas>
+    <div class="botoes">
+      <button id="btnPrev">Anterior</button>
+      <button id="btnNextMat">Próxima Matéria</button>
+      <button id="btnDistribGeral">Media Geral</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>Universidade do Estado do Rio Grande do Norte - UERN</div>
+  <div>Curso C&T</div>
+  <div>Keven William • Lemuel Malaquias • Daniel Henrique</div>
+  <div>Matéria: Unidade Curricular de Extensão</div>
+  <div>Professora: Mara</div>
+</footer>
+
+<script>
+const materias = [
+  { titulo: "Pré-Cálculo — Notas por Prova", alunos: [[10,10,10],[7,10,7],[5.3,7.5,10]] },
+  { titulo: "Economia — Notas  por Prova", alunos: [[9.8,8.6,8.7],[9.4,6.5,8.2],[5.5,7.5,9.5]] },
+  { titulo: "Vetores e Geometria Analítica — Notas por Prova", alunos: [[10,10],[8.3,5],[2.5,8.0]] },
+  { titulo: "Cálculo I — Notas por Prova", alunos: [[10],[7.5],[3.5]] }
+];
+const coresProvas = ['54,162,235','75,192,192','255,159,64'];
+let indiceAtual = 0;
+let chartAtual = null;
+
+function criarGrafico(materia){
+  const alunos = materia.alunos;
+  const labelsAlunos = alunos.map((_,i)=>`Aluno ${i+1}`);
+  const datasets=[];
+  for(let p=0;p<3;p++){
+    const data = alunos.map(a=>a[p]!==undefined?a[p]:null);
+    if(data.some(v=>v!==null)){
+      datasets.push({
+        label:`Prova ${p+1}`,
+        data:data,
+        backgroundColor:data.map(v=>v!==null?`rgba(${coresProvas[p]},0.85)`:'rgba(200,200,200,0.3)'),
+        borderColor:`rgba(${coresProvas[p]},1)`,
+        borderWidth:1
+      });
+    }
+  }
+  const ctx=document.getElementById("graficoMateria").getContext("2d");
+  if(chartAtual) chartAtual.destroy();
+  chartAtual=new Chart(ctx,{
+    type:'bar',
+    data:{ labels: labelsAlunos, datasets: datasets },
+    options:{
+      responsive:true,
+      aspectRatio:1.3,
+      plugins:{
+        legend:{ position:'top' },
+        title:{ display:true, text:materia.titulo, font:{size:18, weight:'bold'} },
+        datalabels:{ display:true, color:'#000', anchor:'center', align:'center', font:{weight:'bold',size:14} }
+      },
+      scales:{
+        x:{ title:{display:true,text:'Alunos'}, stacked:false, ticks:{maxRotation:0} },
+        y:{ beginAtZero:true, min:0, max:10, title:{display:true,text:'Notas'} }
+      },
+      datasets:{ bar:{ barPercentage:0.5, categoryPercentage:0.5 } }
+    },
+    plugins:[ChartDataLabels]
+  });
+}
+
+function criarDistribGeral(materia){
+  const alunos = materia.alunos;
+  const notasContadas = Array(11).fill(0);
+  alunos.forEach(a=>{
+    const media = a.reduce((s,v)=>s+v,0)/a.length;
+    const notaArred = Math.floor(media); // arredondamento para baixo
+    notasContadas[notaArred]++;
+  });
+  const labelsNotas = Array.from({length:11},(_,i)=>i);
+  const dataNotas = notasContadas;
+
+  const ctx=document.getElementById("graficoMateria").getContext("2d");
+  if(chartAtual) chartAtual.destroy();
+  chartAtual=new Chart(ctx,{
+    type:'bar',
+    data:{ labels: labelsNotas, datasets:[{ label:`Media Geral`, data:dataNotas, backgroundColor:'rgba(75,192,192,0.85)', borderColor:'rgba(0,0,0,1)', borderWidth:2 }] },
+    options:{
+      responsive:true,
+      aspectRatio:1.3,
+      plugins:{
+        legend:{ position:'top' },
+        title:{ display:true, text:`Media Geral - ${materia.titulo}`, font:{size:18, weight:'bold'} },
+        datalabels:{ display:true, color:'#000', anchor:'center', align:'center', font:{weight:'bold',size:14} }
+      },
+      scales:{
+        x:{ title:{display:true,text:'Notas'}, beginAtZero:true },
+        y:{ title:{display:true,text:'Número de Alunos'}, beginAtZero:true, ticks:{precision:0} }
+      },
+      datasets:{ bar:{ barPercentage:0.7, categoryPercentage:0.7 } } // barras mais finas
+    },
+    plugins:[ChartDataLabels]
+  });
+}
+
+document.getElementById("nextBtn").addEventListener("click",()=>{
+  document.getElementById("infografico").style.display="none";
+  document.getElementById("notasPage").style.display="flex";
+  criarGrafico(materias[indiceAtual]);
+});
+document.getElementById("btnPrev").addEventListener("click",()=>{
+  indiceAtual=(indiceAtual-1+materias.length)%materias.length;
+  criarGrafico(materias[indiceAtual]);
+});
+document.getElementById("btnNextMat").addEventListener("click",()=>{
+  indiceAtual=(indiceAtual+1)%materias.length;
+  criarGrafico(materias[indiceAtual]);
+});
+document.getElementById("btnDistribGeral").addEventListener("click",()=>{
+  criarDistribGeral(materias[indiceAtual]);
+});
+</script>
+
+</body>
+</html>
